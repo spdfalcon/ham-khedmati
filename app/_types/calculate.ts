@@ -139,3 +139,37 @@ export interface AdditionalServiceCondition {
   label: string;
   description: string;
 }
+
+export interface DeficitEducationOption extends SelectOption<'diploma' | 'associate' | 'bachelor' | 'master' | 'phd'> {
+  deficitMonths: number;
+  description: string;
+}
+
+export interface DeficitQuranOption extends SelectOption<'none' | 'partial' | 'complete'> {
+  deficitMonths: number;
+  description: string;
+}
+
+export interface DeficitResult {
+  totalMonths: number;
+  details: {
+    [key: string]: {
+      label: string;
+      months: number;
+      description: string;
+    }
+  };
+}
+
+export interface DeficitFormData {
+  education: string;
+  isMarried: boolean;
+  childCount: number;
+  basijMembership: number;
+  isFrontierGuard: boolean;
+  isElite: boolean;
+  quranLevel: 'none' | 'partial' | 'complete';
+  sportAchievements: 'none' | 'provincial' | 'national' | 'international';
+  skillCertificates: number;
+  researchProjects: number;
+}
