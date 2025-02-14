@@ -22,20 +22,10 @@ const navItems = [
   { 
     title: 'پادگان‌ها',
     href: '/padegans',
-    subItems: [
-      { title: 'لیست پادگان‌ها', href: '/padegans/list' },
-      { title: 'نقشه پادگان‌ها', href: '/padegans/map' },
-      { title: 'ثبت نظر', href: '/padegans/review' },
-    ]
   },
   { 
     title: 'هم‌خدمتی‌یابی',
     href: '/soldiers',
-    subItems: [
-      { title: 'جستجوی هم‌خدمتی', href: '/soldiers/search' },
-      { title: 'چت و گفتگو', href: '/soldiers/chat' },
-      { title: 'تجربیات', href: '/soldiers/experiences' },
-    ]
   },
   { 
     title: 'اطلاعات',
