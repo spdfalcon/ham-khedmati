@@ -25,7 +25,7 @@ interface ResetPasswordFormProps {
   token: string;
 }
 
-export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+export default function ResetPasswordForm({  }: ResetPasswordFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     resolver: zodResolver(schema)
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async () => {
     setIsLoading(true);
     try {
       // TODO: API Call با ارسال توکن و رمز عبور جدید
