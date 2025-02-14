@@ -1,22 +1,19 @@
-'use client';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
 import Select from 'react-select';
-import { FaSave } from 'react-icons/fa';
-import type {
-  EducationOption,
-  ServiceLocationOption,
-  SportMedalOption,
-  MaritalStatusOption,
-  SpecialConditionOption,
-  AdditionalOption,
-  ServiceDurationFormData
+import type { 
+  DurationEducationOption, 
+  DurationLocationOption, 
+  DurationMedalOption, 
+  DurationMaritalOption,
+  SpecialServiceCondition,
+  AdditionalServiceCondition
 } from '@/app/_types/calculate';
 
-const educationOptions: EducationOption[] = [
+const educationOptions: DurationEducationOption[] = [
   { value: 'diploma', label: 'دیپلم' },
   { value: 'associate', label: 'کاردانی' },
   { value: 'bachelor', label: 'کارشناسی' },
@@ -24,7 +21,7 @@ const educationOptions: EducationOption[] = [
   { value: 'phd', label: 'دکتری' }
 ];
 
-const serviceLocationOptions: ServiceLocationOption[] = [
+const serviceLocationOptions: DurationLocationOption[] = [
   { value: 'capital', label: 'مرکز استان', reduction: 0 },
   { value: 'city', label: 'شهرستان', reduction: 1 },
   { value: 'deprived', label: 'مناطق محروم', reduction: 2 },
@@ -32,7 +29,8 @@ const serviceLocationOptions: ServiceLocationOption[] = [
   { value: 'border', label: 'مناطق مرزی', reduction: 4 }
 ];
 
-const sportMedalOptions: SportMedalOption[] = [
+// اضافه کردن آپشن‌های مدال ورزشی با استایل مناسب
+const sportMedalOptions: DurationMedalOption[] = [
   { value: 'none', label: 'بدون مدال', description: 'بدون کسری خدمت' },
   { value: 'national', label: 'مدال کشوری', description: '1 ماه کسری' },
   { value: 'asian', label: 'مدال آسیایی', description: '2 ماه کسری' },
@@ -40,7 +38,7 @@ const sportMedalOptions: SportMedalOption[] = [
   { value: 'olympic', label: 'مدال المپیک', description: '4 ماه کسری' }
 ];
 
-const maritalStatusOptions: MaritalStatusOption[] = [
+const maritalStatusOptions: DurationMaritalOption[] = [
   { 
     value: 'single', 
     label: 'مجرد', 
@@ -55,25 +53,23 @@ const maritalStatusOptions: MaritalStatusOption[] = [
   }
 ];
 
-const specialConditions: SpecialConditionOption[] = [
-  { name: 'isElite', label: 'نخبه علمی هستم', description: '4 ماه کسری', reduction: 4 },
-  { name: 'isSupportingFamily', label: 'سرپرست خانوار هستم', description: '2 ماه کسری', reduction: 2 },
-  { name: 'isVeteranChild', label: 'فرزند جانباز هستم', description: '3 ماه کسری', reduction: 3 },
-  { name: 'quranCertificate', label: 'حافظ قرآن هستم', description: '1 ماه کسری', reduction: 1 }
+const specialConditions: SpecialServiceCondition[] = [
+  { name: 'isElite', label: 'نخبه علمی هستم', description: '4 ماه کسری' },
+  { name: 'isSupportingFamily', label: 'سرپرست خانوار هستم', description: '2 ماه کسری' },
+  { name: 'isVeteranChild', label: 'فرزند جانباز هستم', description: '3 ماه کسری' },
+  { name: 'quranCertificate', label: 'حافظ قرآن هستم', description: '1 ماه کسری' }
 ];
 
-const additionalOptions: AdditionalOption[] = [
+const additionalConditions: AdditionalServiceCondition[] = [
   { 
     name: 'voluntaryService', 
     label: 'اعزام داوطلبانه', 
-    description: '1 ماه کسری خدمت',
-    reduction: 1
+    description: '1 ماه کسری خدمت'
   },
   { 
     name: 'isBorderGuard', 
     label: 'خدمت در مرزبانی', 
-    description: '2 ماه کسری خدمت',
-    reduction: 2
+    description: '2 ماه کسری خدمت'
   }
 ];
 
@@ -94,27 +90,24 @@ const formSchema = z.object({
   voluntaryService: z.boolean()
 });
 
+type FormData = z.infer<typeof formSchema>;
+
 export default function CalculateDurationForm() {
   const [calculatedDuration, setCalculatedDuration] = useState<number | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
 
-  const { register, handleSubmit, control, watch, formState: { errors }, setValue, getValues } = 
-    useForm<ServiceDurationFormData>({
+  const { register, handleSubmit, control, watch, formState: { errors }, setValue, getValues } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       basijDuration: 0,
       distanceFromHome: 0,
-      isBorderGuard: false,
-      hasChild: 0,
-      techCertificates: 0,
-      sportsMedals: 'none'
+      isBorderGuard: false
     }
   });
 
   // Watch all form values for real-time calculation
   const formValues = watch();
 
-  const calculateServiceDuration = (data: ServiceDurationFormData) => {
+  const calculateServiceDuration = (data: FormData) => {
     let duration = 21; // مدت پایه خدمت
 
     // کسری تحصیلات
@@ -164,7 +157,7 @@ export default function CalculateDurationForm() {
     return Math.max(12, Math.round(duration));
   };
 
-  const onSubmit = (data: ServiceDurationFormData) => {
+  const onSubmit = (data: FormData) => {
     const duration = calculateServiceDuration(data);
     setCalculatedDuration(duration);
   };
@@ -186,22 +179,6 @@ export default function CalculateDurationForm() {
     return { years, months: remainingMonths };
   };
 
-  const handleSaveToProfile = async () => {
-    if (!calculatedDuration) return;
-
-    setIsSaving(true);
-    try {
-      // TODO: اینجا اطلاعات به API ارسال خواهد شد
-      await new Promise(resolve => setTimeout(resolve, 1500)); // شبیه‌سازی API call
-      alert('اطلاعات خدمت شما با موفقیت در پروفایل ذخیره شد');
-    } catch (error) {
-      console.error('Error saving service info:', error);
-      alert('خطا در ذخیره‌سازی اطلاعات');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* سطح تحصیلات */}
@@ -211,12 +188,14 @@ export default function CalculateDurationForm() {
           name="education"
           control={control}
           render={({ field }) => (
-            <Select
+            <Select<DurationEducationOption>
               {...field}
               options={educationOptions}
               placeholder="انتخاب کنید"
               className="service-select"
               classNamePrefix="select"
+              onChange={(option) => field.onChange(option?.value)}
+              value={educationOptions.find(option => option.value === field.value)}
             />
           )}
         />
@@ -293,12 +272,14 @@ export default function CalculateDurationForm() {
           name="serviceLocation"
           control={control}
           render={({ field }) => (
-            <Select
+            <Select<DurationLocationOption>
               options={serviceLocationOptions}
               {...field}
               placeholder="انتخاب کنید"
               className="service-select"
               classNamePrefix="select"
+              onChange={(option) => field.onChange(option?.value)}
+              value={serviceLocationOptions.find(option => option.value === field.value)}
             />
           )}
         />
@@ -307,6 +288,7 @@ export default function CalculateDurationForm() {
       {/* شرایط خاص */}
       <div className="space-y-4 bg-secondary-900/30 p-4 rounded-xl">
         <h3 className="text-white font-medium mb-4">شرایط ویژه</h3>
+        
         {specialConditions.map((item) => (
           <label
             key={item.name}
@@ -395,9 +377,10 @@ export default function CalculateDurationForm() {
       </div>
 
       {/* سایر موارد */}
-      <div className="space-y-4 bg-secondary-900/30 پ-4 rounded-xl">
+      <div className="space-y-4 bg-secondary-900/30 p-4 rounded-xl">
         <h3 className="text-white font-medium mb-4">موارد تکمیلی</h3>
-        {additionalOptions.map((item) => (
+        
+        {additionalConditions.map((item) => (
           <label
             key={item.name}
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all
@@ -424,34 +407,15 @@ export default function CalculateDurationForm() {
         ))}
       </div>
 
-      {/* نمایش نتیجه و دکمه ذخیره */}
+      {/* نمایش نتیجه بهبود یافته */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mt-8 p-6 bg-primary-500/10 rounded-xl border border-primary-500/20"
       >
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-white">
-            مدت خدمت شما:
-          </h3>
-          {calculatedDuration && (
-            <button
-              type="button"
-              onClick={handleSaveToProfile}
-              disabled={isSaving}
-              className={`flex items-center gap-2 px-6 py-2 rounded-xl text-white
-                transition-all duration-300 ${
-                  isSaving 
-                    ? 'bg-primary-500/50 cursor-wait' 
-                    : 'bg-primary-500 hover:bg-primary-600 hover:-translate-y-0.5'
-                }`}
-            >
-              <FaSave className="w-5 h-5" />
-              <span>{isSaving ? 'در حال ذخیره...' : 'ذخیره در پروفایل'}</span>
-            </button>
-          )}
-        </div>
-
+        <h3 className="text-xl font-bold text-white mb-4">
+          مدت خدمت شما:
+        </h3>
         {calculatedDuration ? (
           <>
             <div className="text-3xl font-bold text-primary-400 mb-2">
