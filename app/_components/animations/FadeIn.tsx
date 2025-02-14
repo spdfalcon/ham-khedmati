@@ -5,15 +5,9 @@ interface FadeInProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  threshold?: number;
 }
 
-export default function FadeIn({ 
-  children, 
-  className = '', 
-  delay = 0,
-  threshold = 0.1 
-}: FadeInProps) {
+export default function FadeIn({ children, className = '', delay = 0 }: FadeInProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -25,7 +19,9 @@ export default function FadeIn({
           observer.unobserve(entry.target);
         }
       },
-      { threshold }
+      {
+        threshold: 0.1
+      }
     );
 
     if (ref.current) {
@@ -37,14 +33,12 @@ export default function FadeIn({
         observer.unobserve(ref.current);
       }
     };
-  }, [threshold]);
+  }, []);
 
   return (
     <div
       ref={ref}
-      className={`
-        ${className}
-        transition-all duration-700 ease-out
+      className={`${className} transition-all duration-700 ease-out
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
       `}
       style={{ transitionDelay: `${delay}ms` }}
