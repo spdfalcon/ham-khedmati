@@ -7,7 +7,9 @@ export const metadata: Metadata = {
   description: 'تعیین رمز عبور جدید برای حساب کاربری',
 };
 
-export default function ResetPasswordPage({ params }: { params: { token: string } }) {
+export default function ResetPasswordPage(props: { params: { token: string } }) {
+  const { params } = props;
+  
   return (
     <AuthLayout
       title="تعیین رمز عبور جدید"
