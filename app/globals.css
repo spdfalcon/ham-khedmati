@@ -79,3 +79,32 @@
 body {
   
 }
+
+/* Custom styles for react-select */
+.service-select .select__control {
+  @apply bg-secondary-800 border-primary-500/10 rounded-xl text-white;
+}
+
+.service-select .select__control--is-focused {
+  @apply border-primary-500/30 ring-1 ring-primary-500/30 shadow-none;
+}
+
+.service-select .select__menu {
+  @apply bg-secondary-800 border border-primary-500/10 rounded-xl mt-2;
+}
+
+.service-select .select__option {
+  @apply text-white bg-secondary-800 hover:bg-primary-500/10;
+}
+
+.service-select .select__option--is-selected {
+  @apply bg-primary-500;
+}
+
+.service-select .select__single-value {
+  @apply text-white;
+}
+
+.service-select .select__placeholder {
+  @apply text-gray-400;
+}
