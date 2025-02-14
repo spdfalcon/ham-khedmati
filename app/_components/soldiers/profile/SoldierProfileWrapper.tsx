@@ -79,7 +79,7 @@ export default function SoldierProfileWrapper({ soldierId }: SoldierProfileWrapp
             >
               <div className="w-32 h-32 rounded-2xl overflow-hidden border-4 border-white shadow-xl">
                 <Image
-                  src={soldier.avatar}
+                  src={'/'}
                   alt={soldier.name}
                   fill
                   className="object-cover"
