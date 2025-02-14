@@ -6,7 +6,13 @@ export const metadata: Metadata = {
   description: 'مشاهده جزئیات کامل پادگان، امکانات، نظرات و روزشمار اعزام',
 };
 
-export default function PadeganPage({ params }: { params: { slug: string } }) {
+interface PageProps {
+  params: {
+    slug: string;
+  }
+}
+
+export default function PadeganPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary-900 to-secondary-800">
       <PadeganDetails slug={params.slug} />
